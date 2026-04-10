@@ -4,7 +4,7 @@ import os
 import time
 from datetime import datetime
 
-# Base URLs
+# base URLs
 topUrl="https://hacker-news.firebaseio.com/v0/topstories.json"
 itemUrl="https://hacker-news.firebaseio.com/v0/item/{}.json"
 
@@ -75,7 +75,10 @@ for story_id in story_ids:
     story=fetchStory(story_id)
     if not story:
         continue
+    
+    #printing the story if for degubbing purposes, to see which story is being processed
     print(f"Fetching story {story_id}")
+
     title=story.get("title","")
     category=categorize_title(title)
 
