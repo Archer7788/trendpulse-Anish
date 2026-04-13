@@ -15,11 +15,11 @@ TOTAL_IDS_TO_FETCH=500
 
 #Each Category keywords
 CATEGORIES={
-    "technology":["ai", "software", "tech", "code", "computer", "data", "cloud", "api", "gpu", "llm"],
-    "entertainment":["movie", "film", "music", "netflix", "game", "book", "show", "award", "streaming"],
-    "worldnews":["war", "government", "country", "president", "election", "climate", "attack", "global"],
-    "science":["research", "study", "space", "physics", "biology", "discovery", "nasa", "genome"],
-    "sports":["nfl", "nba", "fifa", "sport", "game", "team", "player", "league", "championship"]
+    "technology":["ai","software","tech","code","computer","data","cloud","api","gpu","llm"],
+    "entertainment":["movie","film","music","netflix","game","book","show","award","streaming"],
+    "worldnews":["war","government","country","president","election","climate","attack","global"],
+    "science":["research","study","space","physics","biology","discovery","nasa","genome"],
+    "sports":["nfl","nba","fifa","sport","game","team","player","league","championship"]
 }
 
 # **** Each Function responsible for a specific task:-  ****
@@ -54,7 +54,7 @@ def fetch_story(story_id):
 def classify_story(title):
     if not title:
         return None
-# lowering because the title might have uppercase letters and we want to match keywords in a case insensitive way
+    # lowering because the title might have uppercase letters and we want to match keywords in a case insensitive way
     title_lower=title.lower()
 
     for category, keywords in CATEGORIES.items():
