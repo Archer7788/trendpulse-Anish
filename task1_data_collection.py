@@ -5,13 +5,13 @@ import os
 from datetime import datetime
 
 #Configuration(Base URLs):-
-BASE_URL="https://hacker-news.firebaseio.com/v0"
-# header
-HEADERS={"User-Agent":"TrendPulse/1.0"}
+baseURL="https://hacker-news.firebaseio.com/v0"
+# header used to identify the script to the API
+header={"User-Agent":"TrendPulse/1.0"}
 
 # Constants
-MAX_PER_CATEGORY=25
-TOTAL_IDS_TO_FETCH=500
+maxCat=25
+totalIDS=500
 
 #Each Category keywords
 CATEGORIES={
@@ -26,25 +26,25 @@ CATEGORIES={
 
 
 # Fetching all the top stories from Hackernews
-def fetch_top_story_ids():
+def fetchALL():
     try:
-        url=f"{BASE_URL}/topstories.json"
-        response=requests.get(url,headers=HEADERS)
+        url=f"{baseURL}/topstories.json"
+        response=requests.get(url,headers=header)
         response.raise_for_status()
-        return response.json()[:TOTAL_IDS_TO_FETCH]
+        return response.json()[:totalIDS]
     except Exception as e:
         print(f"Error fetching top stories: {e}")
         return []
 
 
 #  Fetching individual story details 
-def fetch_story(story_id):
+def fetchOne(story_id):
     try:
-        url=f"{BASE_URL}/item/{story_id}.json"
-        response=requests.get(url,headers=HEADERS)
+        url=f"{baseURL}/item/{story_id}.json"
+        response=requests.get(url,headers=header)
         response.raise_for_status()
         return response.json()
-    # if fetch failed we print the error and return None
+    # if fetch failed printing the error and return None
     except Exception :
         print(f"Failed to fetch story {story_id}")
         return None
@@ -67,7 +67,7 @@ def classify_story(title):
 # ---------------- Main logic---------------- #
 
 
-story_ids=fetch_top_story_ids()
+story_ids=fetchALL()
 
 # Storing categorized data and counts
 categorized_data={cat: [] for cat in CATEGORIES}
@@ -80,24 +80,22 @@ for category in CATEGORIES:
     for story_id in story_ids:
         # printing the story id we are fetching for clarity and debugging
         print(f"Fetching story {story_id}")
-        # Stoping if category full
-        if len(categorized_data[category])>=MAX_PER_CATEGORY:
+        # Stoping if category is full 
+        if len(categorized_data[category])>=maxCat:
             break
 
-        story=fetch_story(story_id)
+        story=fetchOne(story_id)
         if not story:
             continue
             
         title=story.get("title","")
         assigned_category=classify_story(title)
             
-        # Only process if the story belongs to the current category we are filling
+        # process is done only if the story belongs to the current category we are filling
         if assigned_category!=category:
             continue
         
-        
-
-        # Extract fields safely
+        # Extracting fields
         data={
             "post_id":story.get("id"),
             "title":title,
@@ -114,8 +112,8 @@ for category in CATEGORIES:
 
 
     # If category is not full i added dummy data to reach the required count
-    if len(categorized_data[category])<MAX_PER_CATEGORY:
-        for i in range(len(categorized_data[category]),MAX_PER_CATEGORY):
+    if len(categorized_data[category])<maxCat:
+        for i in range(len(categorized_data[category]),maxCat):
             data={
             "post_id":i+10000, 
             "title":f"Dummy Title {i+1} for {category}",
@@ -138,13 +136,13 @@ for category in CATEGORIES:
 
 # ---------------- Save File Function---------------- #
 
-# Ensure data directory exists
+# Ensures data directory exists
 os.makedirs("data",exist_ok=True)
 
 # Filename with date
 filename=f"data/trends_{datetime.now().strftime('%Y%m%d')}.json"
 
-# Save JSON
+# Saving JSON
 with open(filename,"w",encoding="utf-8") as f:
     json.dump(collected_data,f,indent=4)
 

@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 # configuration:
-inputFile="data/trends_20260410.json"    
+inputFile="data/trends_20260414.json"    
 outputFile="data/trends_clean.csv"
 
 
@@ -13,7 +13,7 @@ if not os.path.exists(inputFile):
     
 
 else:
-    # Loading if data if exiests
+    # Loading data if exiests
     df=pd.read_json(inputFile)
 
 
@@ -79,4 +79,3 @@ else:
     print("\nStories per category:")
     for category,count in category_counts.itertuples(index=False):
         print(f" {category} \t",f"{count}")
-    # print(category_counts.to_string(index=False, header=False)) 
