@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 
 
@@ -46,8 +47,9 @@ plt.close()
 category_counts=df["category"].value_counts()             # Counting number of stories in each category using value_counts()
 
 # Plotting bar chart
+colors = plt.cm.tab10(np.arange(len(category_counts)))
 plt.figure()
-plt.bar(category_counts.index, category_counts.values)
+plt.bar(category_counts.index, category_counts.values, color=colors)
 # Adding labels and title
 plt.xlabel("Category")
 plt.ylabel("Number of Stories")
